@@ -1,2 +1,6 @@
 ref/
 exp/
+*.o
+simsh1
+simsh2
+simsh3
