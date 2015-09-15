@@ -1,0 +1,42 @@
+1. A built-in command is a command that is actually part of the shell and can modify the state of the shell itself. This
+   differs from a "regular" command which is actually a program that the shell invokes. An example of a built in command
+   is "cd". This changes the current working directory of the shell, and it doesn't invoke a program to do so.
+
+2. Environment variables are globally recognized variables across the entire environment. This includes both the shell
+   and any of its children.
+
+   HOME - the full path to the home directory of the current user. "~" expands to this variable in the BASH shell
+   SHELL - the full path to the user's default shell
+   PATH - a list of paths to search to find user programs
+   LANG - the user's default locale
+   LOGNAME - the name of the currently logged in user
+
+3. If the calls to open() and dup2() are called without checking the value returned from fork(), it makes no difference:
+
+       int ofile = open(o_filename, O_WRONLY | O_CREAT);
+       dup2(ofile, STDOUT_FILENO);
+       int pid = fork();
+       if(pid){
+          //parent
+       }
+       else{
+          //child
+       }
+
+       *****************************
+       Is the exact same as:
+       *****************************
+
+       int pid = fork();
+       int ofile = open(o_filename, O_WRONLY | O_CREAT);
+       dup2(ofile, STDOUT_FILENO);
+       if(pid){
+          //parent
+       }
+       else{
+          //child
+       }
+
+  In both cases, the file descriptor for STDOUT is changed in the parent and the child. Also, both the parent and the
+  child are responsible for closing ofile.  However, if the calls to open() and dup2() only happen in the "else" block
+  (the child), those effects are only seen by the child
